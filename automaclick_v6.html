@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Automaclick v6.0 - Gerador de Links Mágicos com IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .form-container {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .form-group input[type="text"], 
+        .form-group input[type="url"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group input.error {
+            border-color: #dc3545;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .checkbox-item:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .checkbox-item.checked {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+        
+        .checkbox-item .icon {
+            font-size: 20px;
+        }
+        
+        .checkbox-item .label {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .new-feature {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .new-feature h3 {
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+        
+        .new-feature p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 20px;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result-container {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .result-container.show {
+            display: block;
+        }
+        
+        .result-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .result-link {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .copy-btn:hover {
+            background: #218838;
+        }
+        
+        .footer-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .footer-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 10px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .footer-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Automaclick v6.0</h1>
+            <p>Gerador de Links Mágicos com IA Conversacional</p>
+        </div>
+        
+        <div class="form-container">
+            <div class="new-feature">
+                <h3>🤖 NOVA FUNCIONALIDADE: Chatbot com IA!</h3>
+                <p>Agora seus clientes conversam diretamente com uma IA especializada no seu produto!</p>
+            </div>
+            
+            <form id="automaclikForm">
+                <div class="form-group">
+                    <label for="serverUrl">🌐 URL do Servidor Chatbot:</label>
+                    <input 
+                        type="url" 
+                        id="serverUrl" 
+                        placeholder="https://seu-servidor.onrender.com"
+                        value="http://localhost:3000"
+                        required
+                    >
+                    <div class="error-message" id="serverUrlError">Por favor, insira uma URL válida do servidor</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="robotName">🤖 Nome do Robô/Assistente:</label>
+                    <input 
+                        type="text" 
+                        id="robotName" 
+                        placeholder="@MeuAssistente"
+                        required
+                    >
+                    <div class="error-message" id="robotNameError">O nome deve começar com @</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="salesPageUrl">🔗 Link da Página de Vendas:</label>
+                    <input 
+                        type="url" 
+                        id="salesPageUrl" 
+                        placeholder="https://exemplo.com/meu-produto"
+                        required
+                    >
+                    <div class="error-message" id="salesPageUrlError">Por favor, insira uma URL válida</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>📱 Redes Sociais para Redirecionamento:</label>
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item" data-network="whatsapp">
+                            <input type="checkbox" id="whatsapp" name="networks" value="whatsapp" checked>
+                            <span class="icon">📱</span>
+                            <span class="label">WhatsApp</span>
+                        </div>
+                        
+                        <div class="checkbox-item" data-network="instagram">
+                            <input type="checkbox" id="instagram" name="networks" value="instagram">
+                            <span class="icon">📷</span>
+                            <span class="label">Instagram</span>
+                        </div>
+                        
+                        <div class="checkbox-item" data-network="facebook">
+                            <input type="checkbox" id="facebook" name="networks" value="facebook">
+                            <span class="icon">👥</span>
+                            <span class="label">Facebook</span>
+                        </div>
+                        
+                        <div class="checkbox-item" data-network="linkedin">
+                            <input type="checkbox" id="linkedin" name="networks" value="linkedin">
+                            <span class="icon">💼</span>
+                            <span class="label">LinkedIn</span>
+                        </div>
+                        
+                        <div class="checkbox-item" data-network="youtube">
+                            <input type="checkbox" id="youtube" name="networks" value="youtube">
+                            <span class="icon">🎥</span>
+                            <span class="label">YouTube</span>
+                        </div>
+                        
+                        <div class="checkbox-item" data-network="tiktok">
+                            <input type="checkbox" id="tiktok" name="networks" value="tiktok">
+                            <span class="icon">🎵</span>
+                            <span class="label">TikTok</span>
+                        </div>
+                        
+                        <div class="checkbox-item" data-network="twitter">
+                            <input type="checkbox" id="twitter" name="networks" value="twitter">
+                            <span class="icon">🐦</span>
+                            <span class="label">Twitter/X</span>
+                        </div>
+                        
+                        <div class="checkbox-item" data-network="kwai">
+                            <input type="checkbox" id="kwai" name="networks" value="kwai">
+                            <span class="icon">🎬</span>
+                            <span class="label">Kwai</span>
+                        </div>
+                        
+                        <div class="checkbox-item" data-network="chatbot" style="border-color: #ff6b6b; background: #fff5f5;">
+                            <input type="checkbox" id="chatbot" name="networks" value="chatbot" checked>
+                            <span class="icon">🤖</span>
+                            <span class="label">Chatbot IA (NOVO!)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="generate-btn" id="generateBtn">
+                    ✨ Gerar Link Mágico com IA
+                </button>
+            </form>
+            
+            <div class="result-container" id="resultContainer">
+                <div class="result-title">
+                    🎉 Seu Link Mágico foi gerado!
+                </div>
+                <div class="result-link" id="resultLink"></div>
+                <button class="copy-btn" id="copyBtn">📋 Copiar Link</button>
+            </div>
+            
+            <div class="footer-buttons">
+                <a href="#" class="footer-btn" id="manualBtn">📖 Manual de Uso</a>
+                <a href="#" class="footer-btn" id="testBtn">🧪 Logs de Teste</a>
+                <a href="#" class="footer-btn" id="aboutBtn">ℹ️ Sobre o Projeto</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Utilitários
+        const Utils = {
+            log: (message) => {
+                const timestamp = new Date().toISOString();
+                console.log(`[${timestamp}] ${message}`);
+            },
+            
+            validateRobotName: (name) => {
+                return name.startsWith('@') && name.length > 1;
+            },
+            
+            validateUrl: (url) => {
+                try {
+                    new URL(url);
+                    return true;
+                } catch {
+                    return false;
+                }
+            }
+        };
+
+        // Elementos DOM
+        const form = document.getElementById('automaclikForm');
+        const serverUrlInput = document.getElementById('serverUrl');
+        const robotNameInput = document.getElementById('robotName');
+        const salesPageUrlInput = document.getElementById('salesPageUrl');
+        const generateBtn = document.getElementById('generateBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultLink = document.getElementById('resultLink');
+        const copyBtn = document.getElementById('copyBtn');
+
+        // Validação em tempo real
+        robotNameInput.addEventListener('input', function() {
+            const isValid = Utils.validateRobotName(this.value);
+            const errorElement = document.getElementById('robotNameError');
+            
+            if (this.value && !isValid) {
+                this.classList.add('error');
+                errorElement.style.display = 'block';
+            } else {
+                this.classList.remove('error');
+                errorElement.style.display = 'none';
+            }
+        });
+
+        salesPageUrlInput.addEventListener('input', function() {
+            const isValid = Utils.validateUrl(this.value);
+            const errorElement = document.getElementById('salesPageUrlError');
+            
+            if (this.value && !isValid) {
+                this.classList.add('error');
+                errorElement.style.display = 'block';
+            } else {
+                this.classList.remove('error');
+                errorElement.style.display = 'none';
+            }
+        });
+
+        serverUrlInput.addEventListener('input', function() {
+            const isValid = Utils.validateUrl(this.value);
+            const errorElement = document.getElementById('serverUrlError');
+            
+            if (this.value && !isValid) {
+                this.classList.add('error');
+                errorElement.style.display = 'block';
+            } else {
+                this.classList.remove('error');
+                errorElement.style.display = 'none';
+            }
+        });
+
+        // Interação com checkboxes
+        document.querySelectorAll('.checkbox-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const checkbox = this.querySelector('input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+                
+                if (checkbox.checked) {
+                    this.classList.add('checked');
+                } else {
+                    this.classList.remove('checked');
+                }
+            });
+        });
+
+        // Inicializar checkboxes marcados
+        document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+            checkbox.closest('.checkbox-item').classList.add('checked');
+        });
+
+        // Geração do link mágico
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            Utils.log('Iniciando geração do link mágico v6.0');
+            
+            // Validações
+            const serverUrl = serverUrlInput.value.trim();
+            const robotName = robotNameInput.value.trim();
+            const salesPageUrl = salesPageUrlInput.value.trim();
+            
+            if (!Utils.validateUrl(serverUrl)) {
+                alert('Por favor, insira uma URL válida do servidor chatbot');
+                return;
+            }
+            
+            if (!Utils.validateRobotName(robotName)) {
+                alert('O nome do robô deve começar com @');
+                return;
+            }
+            
+            if (!Utils.validateUrl(salesPageUrl)) {
+                alert('Por favor, insira uma URL válida da página de vendas');
+                return;
+            }
+            
+            // Obter redes sociais selecionadas
+            const selectedNetworks = Array.from(document.querySelectorAll('input[name="networks"]:checked'))
+                .map(checkbox => checkbox.value);
+            
+            if (selectedNetworks.length === 0) {
+                alert('Selecione pelo menos uma rede social');
+                return;
+            }
+            
+            // Gerar link mágico
+            generateBtn.disabled = true;
+            generateBtn.textContent = '⏳ Gerando...';
+            
+            setTimeout(() => {
+                const magicLink = generateMagicLink(serverUrl, robotName, salesPageUrl, selectedNetworks);
+                
+                Utils.log(`Link mágico gerado: ${magicLink}`);
+                
+                // Exibir resultado
+                resultLink.textContent = magicLink;
+                resultContainer.classList.add('show');
+                
+                // Scroll para o resultado
+                resultContainer.scrollIntoView({ behavior: 'smooth' });
+                
+                generateBtn.disabled = false;
+                generateBtn.textContent = '✨ Gerar Link Mágico com IA';
+            }, 1500);
+        });
+
+        // Função para gerar o link mágico
+        function generateMagicLink(serverUrl, robotName, salesPageUrl, networks) {
+            // Remover barra final da URL do servidor se existir
+            const cleanServerUrl = serverUrl.replace(/\/$/, '');
+            
+            // Construir parâmetros
+            const params = new URLSearchParams({
+                robot: robotName,
+                url: salesPageUrl,
+                networks: networks.join(','),
+                v: '6.0'
+            });
+            
+            // Se chatbot estiver selecionado, usar a rota do chatbot
+            if (networks.includes('chatbot')) {
+                return `${cleanServerUrl}/chatbot?${params.toString()}`;
+            } else {
+                // Usar rota tradicional do Automaclick
+                return `${cleanServerUrl}/automaclick?${params.toString()}`;
+            }
+        }
+
+        // Copiar link
+        copyBtn.addEventListener('click', function() {
+            const link = resultLink.textContent;
+            
+            navigator.clipboard.writeText(link).then(() => {
+                const originalText = this.textContent;
+                this.textContent = '✅ Copiado!';
+                this.style.background = '#28a745';
+                
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.style.background = '#28a745';
+                }, 2000);
+                
+                Utils.log('Link copiado para a área de transferência');
+            }).catch(() => {
+                // Fallback para navegadores mais antigos
+                const textArea = document.createElement('textarea');
+                textArea.value = link;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                this.textContent = '✅ Copiado!';
+                setTimeout(() => {
+                    this.textContent = '📋 Copiar Link';
+                }, 2000);
+            });
+        });
+
+        // Salvar configurações no localStorage
+        function saveSettings() {
+            const settings = {
+                serverUrl: serverUrlInput.value,
+                robotName: robotNameInput.value
+            };
+            localStorage.setItem('automaclick_v6_settings', JSON.stringify(settings));
+        }
+
+        // Carregar configurações do localStorage
+        function loadSettings() {
+            const saved = localStorage.getItem('automaclick_v6_settings');
+            if (saved) {
+                const settings = JSON.parse(saved);
+                if (settings.serverUrl) serverUrlInput.value = settings.serverUrl;
+                if (settings.robotName) robotNameInput.value = settings.robotName;
+            }
+        }
+
+        // Salvar configurações quando os campos mudarem
+        serverUrlInput.addEventListener('change', saveSettings);
+        robotNameInput.addEventListener('change', saveSettings);
+
+        // Carregar configurações ao inicializar
+        loadSettings();
+
+        // Botões do footer (placeholder)
+        document.getElementById('manualBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Manual de uso em desenvolvimento...');
+        });
+
+        document.getElementById('testBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Logs de teste em desenvolvimento...');
+        });
+
+        document.getElementById('aboutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Automaclick v6.0 - Desenvolvido por Manus AI\n\nNova funcionalidade: Chatbot com IA conversacional via OpenRouter!');
+        });
+
+        Utils.log('Automaclick v6.0 inicializado com sucesso');
+    </script>
+</body>
+</html>
+
