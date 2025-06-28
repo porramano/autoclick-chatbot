@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automaclick Chatbot</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap">
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    #chat {
+      background: white;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+    .msg {
+      margin-bottom: 12px;
+    }
+    .bot { color: blue; }
+    .user { color: green; text-align: right; }
+  </style>
+</head>
+<body>
+  <div id="chat">
+    <div class="msg bot">Olá! Posso te ajudar com este produto. 😊</div>
+  </div>
+  <input id="pergunta" type="text" placeholder="Digite sua pergunta..." style="width: 100%; padding: 10px;" />
+  <button onclick="enviar()">Enviar</button>
+
+  <script>
+    async function enviar() {
+      const pergunta = document.getElementById('pergunta').value;
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `<div class="msg user">${pergunta}</div>`;
+
+      const resposta = await fetch('/chatbot?url=https://exemplo.com')
+        .then(res => res.json())
+        .then(data => data.resposta || "Erro ao responder");
+
+      chat.innerHTML += `<div class="msg bot">${resposta}</div>`;
+      document.getElementById('pergunta').value = '';
+    }
+  </script>
+</body>
+</html>
